@@ -80,9 +80,10 @@ class VideoDetect:
             NotificationChannel={'RoleArn': self.roleArn, 'SNSTopicArn': self.snsTopicArn})
 
         self.startJobId=response['JobId']
-        print('Start Job Id: ' + self.startJobId)
+        #print('Start Job Id: ' + self.startJobId)
     
     def GetPersonPathingResults(self):
+        output_dict = dict()
         maxResults = 10
         paginationToken = ''
         finished = False
@@ -92,22 +93,26 @@ class VideoDetect:
                                             MaxResults=maxResults,
                                             NextToken=paginationToken)
 
-            print('Codec: ' + response['VideoMetadata']['Codec'])
-            print('Duration: ' + str(response['VideoMetadata']['DurationMillis']))
-            print('Format: ' + response['VideoMetadata']['Format'])
-            print('Frame rate: ' + str(response['VideoMetadata']['FrameRate']))
-            print()
+            #print('Codec: ' + response['VideoMetadata']['Codec'])
+            #print('Duration: ' + str(response['VideoMetadata']['DurationMillis']))
+            #print('Format: ' + response['VideoMetadata']['Format'])
+            #print('Frame rate: ' + str(response['VideoMetadata']['FrameRate']))
+            #print()
 
             for personDetection in response['Persons']:
-                print('Index: ' + str(personDetection['Person']['Index']))
-                print('Timestamp: ' + str(personDetection['Timestamp']))
-                print()
+                #print('Index: ' + str(personDetection['Person']['Index']))
+                #print('Timestamp: ' + str(personDetection['Timestamp']))
+                index = str(personDetection['Person']['Index'])
+                timestamp = str(personDetection['Timestamp'])
+                output_dict.setdefault(index, []).append(timestamp) 
+                #print()
 
             if 'NextToken' in response:
                 paginationToken = response['NextToken']
             else:
                 finished = True
-       
+
+        return output_dict     
     
     def CreateTopicandQueue(self):
       
@@ -165,21 +170,29 @@ class VideoDetect:
         self.sqs.delete_queue(QueueUrl=self.sqsQueueUrl)
         self.sns.delete_topic(TopicArn=self.snsTopicArn)
 
+    def get_time(list_of_people):
+        '''return time in queue'''
+
+    def get_avg_time(list_of_people):
+        '''calculates average time per location'''
 
 def main():
     roleArn = 'arn:aws:iam::563218694032:role/AWS_rekognition'   
     bucket = 'rekognition-video-console-demo-dub-563218694032-yvdcmvrd0js9dg'
-    video = 'demo_queue.mp4'
+    video = 'queue_two_people.mp4'
 
     analyzer=VideoDetect(roleArn, bucket,video)
     analyzer.CreateTopicandQueue()
 
     analyzer.StartPersonPathing()
     if analyzer.GetSQSMessageSuccess()==True:
-        analyzer.GetPersonPathingResults()
+        results = analyzer.GetPersonPathingResults()
     
+    print(results)
+
     analyzer.DeleteTopicandQueue()
 
 
 if __name__ == "__main__":
     main()
+
