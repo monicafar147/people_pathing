@@ -1,13 +1,15 @@
 import streamlit as st
+from streamlit_folium import folium_static
+import folium
+import numpy as np
 
 def main():
-    st.title('''Epsilon tech presents: Q analytics''')
 
     # upload video
     video_file = open('resources/queue_two_people.mp4', 'rb')
     video_bytes = video_file.read()
 
-    st.video(video_bytes)
+    st.title('''Epsilon tech presents: Q analytics''')
 
     # get data from rekognition
     output = {'0': ['0', '66', '133', '200', '266', '333', '399', '466', '533', '600', '666', '733', '800', '866', '933', '1000', '1066', '1133', '1200', '1266', '1333', '1399', '1466', '1533', '1599', '1666', '1733', '1799', '1866', '1933', '1999', '2066', '2133', '2199', '2266', '2333', '2399', '2466', '2533', '2600', '2666', '2733', '2800', '2866', '2933', '3000', '3066', '3133', '3200', '3266', '3333', '3400', '3466', '3533', '3600', '3666', '3733', '3800', '3866', '3933', '4000', '4066', '4133', '4200', '4266', '4333', '4400', '4466', '4533', '4600', '4666', '4733', '4800', '4866', '4933', '4999', '5066', '5133', '5199', '5266', '5333', '5399', '5466', '5533', '5599', '5666', '5733', '5799', '5866', '5933', '5999', '6066', '6133', '6199', '6266', '6333', '6399', '6466', '6533', '6599', '6666', '6733', '6799', '6866', '6933', '6999', '7066', '7133', '7199', '7266', '7333', '7399', '7466', '7533', '7599', '7666', '7733', '7799', '7866', '7933', '7999', '8066', '8133', '8199', '8266', '8333', '8399', '8466', '8533', '8599', '8666', '8733', '8799', '8866', '8933', '8999', '9066', '9133', '9199', '9266', '9333', '9399', '9466', '9533', '9599', '9666', '9733', '9800', '9866', '9933', '10000', '10066', '10133', '10200', '10266', '10333', '10400', '10466', '10533', '10600', '10666', '10733', '10800', '10866', '10933', '11000', '11066', '11133', '11200', 
@@ -25,18 +27,64 @@ def main():
         return durations
 
     option = st.sidebar.radio("Choose an option",
-    ("Track all people","Select someone to track"))
+    ("Track all people","Select someone to track","map of stores"))
 
     if option == "Track all people":
+        values = st.slider(
+        'Select a range of values',
+        0.0, 30.0, (0.0, 30.0))
+        st.video(video_bytes)
         st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
         st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
 
     if option == "Select someone to track":
+
         person = st.radio('choose a person to track',('Person 0', 'Person 1'))
         if person == 'Person 0':
             st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
         if person == 'Person 1':
             st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
+
+    if option == "map of stores":
+
+        st.markdown('## Get the average time per store based on a location')
+
+        st.info('23 September 2020')
+
+        locations = [[-26.205171,28.049815],[-33.925839,18.423218],[-26.190851,28.311338],
+        [-29.857896,31.029198],[-25.706944,28.229444],[-26.673133,27.926147],
+        [-33.917988,25.570066],[-22.945642,30.484972],[-26.258374,28.47173],
+        [-33.75757,25.397099],[-23.904485,29.468851],[-33.733781,18.975228],
+        [-26.852128,26.666719],[-33.963,22.461727],[-25.667562,27.242079],
+        [-28.732262,24.762315],[-32.847212,27.442179],[-25.775071,29.464821],
+        [-27.76952,30.791653],[-31.588926,28.784431],[-33.64651,19.448523],
+        [-26.716667,27.1],[-25.634731,27.780224],[-31.897563,26.875329],
+        [-25.85,25.633333],[-27.65036,27.234879],[-26.457937,29.465534],
+        [-33.304216,26.53276],[-28.230779,28.307071],[-33.592343,22.205482],
+        [-26.933655,29.241518],[-28.447758,21.256121],[-33.01167,17.944202],
+        [-23.833222,30.163506],[-34.036643,23.049704],[-32.25,24.55]]
+
+        from random import randint
+        durations = [randint(0, 30) for i in range(36)]
+
+        m = folium.Map(location=[-26.205171,28.049815], zoom_start=5)
+
+        for point in range(0, len(locations)):
+            folium.Marker(locations[point],popup="{}min".format(durations[point])).add_to(m)
+
+        # call to render Folium map in Streamlit
+        folium_static(m)
+
+        if st.button('Long queues'):
+            long_queues = [time for time in durations if time > 20]
+
+            m = folium.Map(location=[-26.205171,28.049815], zoom_start=5)
+
+            for point in range(0, len(long_queues)):
+                folium.Marker(locations[point],popup="{}min".format(long_queues[point])).add_to(m)
+
+            # call to render Folium map in Streamlit
+            folium_static(m)
 
 if __name__ == "__main__":
     main()
