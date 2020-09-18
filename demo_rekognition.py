@@ -170,12 +170,6 @@ class VideoDetect:
         self.sqs.delete_queue(QueueUrl=self.sqsQueueUrl)
         self.sns.delete_topic(TopicArn=self.snsTopicArn)
 
-    def get_time(list_of_people):
-        '''return time in queue'''
-
-    def get_avg_time(list_of_people):
-        '''calculates average time per location'''
-
 def main():
     roleArn = 'arn:aws:iam::563218694032:role/AWS_rekognition'   
     bucket = 'rekognition-video-console-demo-dub-563218694032-yvdcmvrd0js9dg'
@@ -191,7 +185,6 @@ def main():
     print(results)
 
     analyzer.DeleteTopicandQueue()
-
 
 if __name__ == "__main__":
     main()
