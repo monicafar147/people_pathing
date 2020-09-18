@@ -2,7 +2,6 @@ import streamlit as st
 
 def main():
     st.title('''Epsilon tech presents: Q analytics''')
-    st.sidebar.radio('select an option',['Track all people', 'Select people to track'])
 
     # upload video
     video_file = open('resources/queue_two_people.mp4', 'rb')
@@ -25,8 +24,12 @@ def main():
         durations = [get_duration(timestamps) for timestamps in output.values() ]
         return durations
 
-    st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
-    st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
+    option = st.sidebar.radio("Choose an option",
+    ("Track all people","Select someone to track"))
+
+    if option == "Track all people":
+        st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
+        st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
 
 if __name__ == "__main__":
     main()
