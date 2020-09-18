@@ -31,5 +31,12 @@ def main():
         st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
         st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
 
+    if option == "Select someone to track":
+        person = st.radio('choose a person to track',('Person 0', 'Person 1'))
+        if person == 'Person 0':
+            st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
+        if person == 'Person 1':
+            st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
+
 if __name__ == "__main__":
     main()
