@@ -31,6 +31,8 @@ def main():
         durations = [get_duration(timestamps) for timestamps in output.values() ]
         return np.mean(durations)
 
+    st.sidebar.title('Track People Paths in video footage')
+    st.sidebar.info('* Use AWS rekognition to get timestamps \n * Calcualte average time per person in queue \n * Show average time on a dashboard across SA \n * Alert store managers with a long queue rate')
     option = st.sidebar.radio("Choose an option",
     ("Track all people","Map of stores"))
 
