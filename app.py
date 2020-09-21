@@ -26,26 +26,26 @@ def main():
         durations = [get_duration(timestamps) for timestamps in output.values() ]
         return durations
 
+    def get_average_duration(output):
+        import numpy as np
+        durations = [get_duration(timestamps) for timestamps in output.values() ]
+        return np.mean(durations)
+
     option = st.sidebar.radio("Choose an option",
-    ("Track all people","Select someone to track","map of stores"))
+    ("Track all people","Map of stores"))
 
     if option == "Track all people":
-        values = st.slider(
-        'Select a range of values',
-        0.0, 30.0, (0.0, 30.0))
+
         st.video(video_bytes)
-        st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
-        st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
+        if st.button('Person 0'):
+            st.success('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
+        if st.button('Person 1'):
+            st.success('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
+        if st.button('Average time'):
+            st.success('average time at store is {} seconds'.format(get_average_duration(output)))
 
-    if option == "Select someone to track":
 
-        person = st.radio('choose a person to track',('Person 0', 'Person 1'))
-        if person == 'Person 0':
-            st.write('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
-        if person == 'Person 1':
-            st.write('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
-
-    if option == "map of stores":
+    if option == "Map of stores":
 
         st.markdown('## Get the average time per store based on a location')
 
