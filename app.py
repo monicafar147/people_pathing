@@ -9,6 +9,7 @@ def main():
     video_file = open('resources/queue_two_people.mp4', 'rb')
     video_bytes = video_file.read()
 
+    st.image('resources/BCX EXA.PNG',use_column_width=False)
     st.title('''Epsilon tech presents: Q analytics''')
 
     # get data from rekognition
