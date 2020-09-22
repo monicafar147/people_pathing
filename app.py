@@ -83,7 +83,7 @@ def main():
         # call to render Folium map in Streamlit
         folium_static(m)
 
-        if st.checklist('Long queues'):
+        if st.button('Long queues'):
             long_queues = [time for time in durations if time > 20]
 
             m = folium.Map(location=[-26.205171,28.049815], zoom_start=5)
