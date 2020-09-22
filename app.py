@@ -10,7 +10,7 @@ def main():
     video_bytes = video_file.read()
 
     st.image('resources/BCX EXA.PNG',use_column_width=False)
-    st.title('''Epsilon tech presents: Q analytics''')
+    st.header('''Epsilon tech presents: Q analytics''')
 
     # get data from rekognition
     output = {'0': ['0', '66', '133', '200', '266', '333', '399', '466', '533', '600', '666', '733', '800', '866', '933', '1000', '1066', '1133', '1200', '1266', '1333', '1399', '1466', '1533', '1599', '1666', '1733', '1799', '1866', '1933', '1999', '2066', '2133', '2199', '2266', '2333', '2399', '2466', '2533', '2600', '2666', '2733', '2800', '2866', '2933', '3000', '3066', '3133', '3200', '3266', '3333', '3400', '3466', '3533', '3600', '3666', '3733', '3800', '3866', '3933', '4000', '4066', '4133', '4200', '4266', '4333', '4400', '4466', '4533', '4600', '4666', '4733', '4800', '4866', '4933', '4999', '5066', '5133', '5199', '5266', '5333', '5399', '5466', '5533', '5599', '5666', '5733', '5799', '5866', '5933', '5999', '6066', '6133', '6199', '6266', '6333', '6399', '6466', '6533', '6599', '6666', '6733', '6799', '6866', '6933', '6999', '7066', '7133', '7199', '7266', '7333', '7399', '7466', '7533', '7599', '7666', '7733', '7799', '7866', '7933', '7999', '8066', '8133', '8199', '8266', '8333', '8399', '8466', '8533', '8599', '8666', '8733', '8799', '8866', '8933', '8999', '9066', '9133', '9199', '9266', '9333', '9399', '9466', '9533', '9599', '9666', '9733', '9800', '9866', '9933', '10000', '10066', '10133', '10200', '10266', '10333', '10400', '10466', '10533', '10600', '10666', '10733', '10800', '10866', '10933', '11000', '11066', '11133', '11200', 
@@ -32,12 +32,12 @@ def main():
         durations = [get_duration(timestamps) for timestamps in output.values() ]
         return np.mean(durations)
 
-    st.sidebar.title('Track People Paths in video footage')
+    st.sidebar.header('Track People Paths in video footage')
     st.sidebar.info('* Use AWS rekognition to get timestamps \n * Calcualte average time per person in queue \n * Show average time on a dashboard across SA \n * Show live time as a bar chart race \n * Alert store managers with a long queue rate')
     option = st.sidebar.radio("Choose an option",
-    ("Track all people","Monitor people in queue","Map of stores"))
+    ("Customer tracking","Queue visualisation","Store Optimiser"))
 
-    if option == "Track all people":
+    if option == "Customer tracking":
 
         st.video(video_bytes)
         if st.button('Person 0'):
@@ -47,13 +47,13 @@ def main():
         if st.button('Average time'):
             st.success('average time at store is {} seconds'.format(get_average_duration(output)))
 
-    if option == "Monitor people in queue":
+    if option == "Queue visualisation":
         # upload video
         video = open('resources/bar chart race.mp4', 'rb')
         video_chart = video.read()
         st.video(video_chart)
 
-    if option == "Map of stores":
+    if option == "Store Optimiser":
 
         st.markdown('## Get the average time per store based on a location')
 
@@ -83,7 +83,7 @@ def main():
         # call to render Folium map in Streamlit
         folium_static(m)
 
-        if st.button('Long queues'):
+        if st.checklist('Long queues'):
             long_queues = [time for time in durations if time > 20]
 
             m = folium.Map(location=[-26.205171,28.049815], zoom_start=5)
