@@ -32,20 +32,25 @@ def main():
         return np.mean(durations)
 
     st.sidebar.title('Track People Paths in video footage')
-    st.sidebar.info('* Use AWS rekognition to get timestamps \n * Calcualte average time per person in queue \n * Show average time on a dashboard across SA \n * Alert store managers with a long queue rate')
+    st.sidebar.info('* Use AWS rekognition to get timestamps \n * Calcualte average time per person in queue \n * Show average time on a dashboard across SA \n * Show live time as a bar chart race \n * Alert store managers with a long queue rate')
     option = st.sidebar.radio("Choose an option",
-    ("Track all people","Map of stores"))
+    ("Track all people","Monitor people in queue","Map of stores"))
 
     if option == "Track all people":
 
         st.video(video_bytes)
         if st.button('Person 0'):
-            st.success('time taken for person 0 is {} seconds'.format(get_duration(output['0'])))
+            st.success('time taken for person 0 is {} seconds'.format(get_duration(output['1'])))
         if st.button('Person 1'):
-            st.success('time taken for person 1 is {} seconds'.format(get_duration(output['1'])))
+            st.success('time taken for person 1 is {} seconds'.format(get_duration(output['0'])))
         if st.button('Average time'):
             st.success('average time at store is {} seconds'.format(get_average_duration(output)))
 
+    if option == "Monitor people in queue":
+        # upload video
+        video = open('resources/bar chart race.mp4', 'rb')
+        video_chart = video.read()
+        st.video(video_chart)
 
     if option == "Map of stores":
 
